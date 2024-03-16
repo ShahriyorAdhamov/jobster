@@ -1,10 +1,14 @@
-import { Landing } from './pages';
+import { Route, Routes } from 'react-router-dom';
+import { Dashboard, Error, Landing, Register } from './pages';
 
 const App = () => {
 	return (
-		<div>
-			<Landing />
-		</div>
+		<Routes>
+			<Route path='/' element={<Dashboard />} />
+			<Route path='/' element={<Register />} />
+			<Route path='/' element={<Landing />} />
+			<Route path='/' element={<Error />} />
+		</Routes>
 	);
 };
 
