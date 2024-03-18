@@ -1,3 +1,4 @@
+import FormRow from './form-row';
 import Logo from './logo';
 
-export { Logo };
+export { FormRow, Logo };
