@@ -37,28 +37,6 @@ export const getAllJobs = createAsyncThunk(
 	}
 );
 
-export const deleteJob = createAsyncThunk(
-	'job/deleteJob',
-	async (jobId, thunkApi) => {
-		thunkApi.dispatch(showLoading());
-		try {
-			const resp = await customFetch.delete(`/jobs/${jobId}`, {
-				headers: {
-					authorization: `Bearer ${thunkApi.getState().user.user.token}`,
-				},
-			});
-			thunkApi.dispatch(getAllJobs());
-			return resp.data.msg;
-		} catch (err) {
-			thunkApi.dispatch(hideLoading());
-			if (err.response.status === 401) {
-				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
-			}
-			return thunkApi.rejectWithValue(err.response.data.msg);
-		}
-	}
-);
-
 const allJobsSlice = createSlice({
 	name: 'allJobs',
 	initialState,
@@ -83,12 +61,6 @@ const allJobsSlice = createSlice({
 			})
 			.addCase(getAllJobs.rejected, (state, { payload }) => {
 				state.isLoading = false;
-				toast.error(payload);
-			})
-			.addCase(deleteJob.fulfilled, (state, { payload }) => {
-				toast.success(payload);
-			})
-			.addCase(deleteJob.rejected, (state, { payload }) => {
 				toast.error(payload);
 			});
 	},
