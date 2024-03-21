@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import authHeader from '../../utils/auth-header';
 import customFetch from '../../utils/axios';
 
 const initialFiltersState = {
@@ -21,18 +22,33 @@ const initialState = {
 	...initialFiltersState,
 };
 
+export const showStats = createAsyncThunk(
+	'allJobs/showStats',
+	async (_, thunkApi) => {
+		try {
+			const resp = await customFetch.get('/jobs/stats', authHeader(thunkApi));
+
+			return resp.data;
+		} catch (err) {
+			if (err.response.status === 401) {
+				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
+			}
+			return thunkApi.rejectWithValue(err.response.data.msg);
+		}
+	}
+);
+
 export const getAllJobs = createAsyncThunk(
 	'allJobs/getJobs',
 	async (_, thunkApi) => {
 		try {
-			const res = await customFetch.get('/jobs', {
-				headers: {
-					authorization: `Bearer ${thunkApi.getState().user.user.token}`,
-				},
-			});
+			const res = await customFetch.get('/jobs', authHeader(thunkApi));
 			return res.data;
 		} catch (err) {
-			return thunkApi.rejectWithValue('Error');
+			if (err.response.status === 401) {
+				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
+			}
+			return thunkApi.rejectWithValue(err.response.data.msg);
 		}
 	}
 );
@@ -60,6 +76,18 @@ const allJobsSlice = createSlice({
 				state.totalJobs = payload.totalJobs;
 			})
 			.addCase(getAllJobs.rejected, (state, { payload }) => {
+				state.isLoading = false;
+				toast.error(payload);
+			})
+			.addCase(showStats.pending, state => {
+				state.isLoading = true;
+			})
+			.addCase(showStats.fulfilled, (state, { payload }) => {
+				state.isLoading = false;
+				state.stats = payload.defaultStats;
+				state.monthlyApplications = payload.monthlyApplications;
+			})
+			.addCase(showStats.rejected, (state, { payload }) => {
 				state.isLoading = false;
 				toast.error(payload);
 			});

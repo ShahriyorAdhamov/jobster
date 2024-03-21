@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
+import authHeader from '../../utils/auth-header';
 import customFetch from '../../utils/axios';
 import {
 	addUserToLocalStorage,
@@ -41,11 +42,11 @@ export const updateUser = createAsyncThunk(
 	'user/updateUser',
 	async (user, thunkApi) => {
 		try {
-			const res = await customFetch.patch('/auth/updateUser', user, {
-				headers: {
-					authorization: `Bearer ${thunkApi.getState().user.user.token}`,
-				},
-			});
+			const res = await customFetch.patch(
+				'/auth/updateUser',
+				user,
+				authHeader(thunkApi)
+			);
 			return res.data;
 		} catch (err) {
 			if (err.response.status === 401) {
