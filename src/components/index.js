@@ -1,5 +1,5 @@
 import BigSidebar from './big-sidebar';
-import ChartsContainer from './charts-container';
+import ChartContainer from './chart-container';
 import FormRow from './form-row';
 import FormRowSelect from './form-row-select';
 import JobInfo from './job-info';
@@ -13,7 +13,7 @@ import StatItem from './stats-item';
 
 export {
 	BigSidebar,
-	ChartsContainer,
+	ChartContainer,
 	FormRow,
 	FormRowSelect,
 	JobInfo,
