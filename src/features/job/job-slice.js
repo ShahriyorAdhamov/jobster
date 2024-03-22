@@ -1,14 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import authHeader from '../../utils/auth-header';
-import customFetch from '../../utils/axios';
-import CheckAuth from '../../utils/check-auth';
 import { getUserFromLocalStorage } from '../../utils/local-storage';
-import {
-	getAllJobs,
-	hideLoading,
-	showLoading,
-} from '../all-jobs/all-jobs-slice';
+import { createJobThunk, deleteJobThunk, editJobThunk } from './job-thunk';
 const initialState = {
 	isLoading: false,
 	position: '',
@@ -22,59 +15,11 @@ const initialState = {
 	editJobId: '',
 };
 
-export const createJob = createAsyncThunk(
-	'job/createJob',
-	async (job, thunkApi) => {
-		try {
-			const resp = await customFetch.post('/jobs', job, authHeader(thunkApi));
-			thunkApi.dispatch(clearValues());
-			return resp.data.msg;
-		} catch (err) {
-			if (err.response.status === 401) {
-				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
-			}
-			return thunkApi.rejectWithValue(err.response.data.msg);
-		}
-	}
-);
+export const createJob = createAsyncThunk('job/createJob', createJobThunk);
 
-export const editJob = createAsyncThunk(
-	'job/editJob',
-	async ({ jobId, job }, thunkApi) => {
-		try {
-			const resp = await customFetch.patch(
-				`/jobs/${jobId}`,
-				job,
-				authHeader(thunkApi)
-			);
-			thunkApi.dispatch(clearValues());
-			return resp.data;
-		} catch (err) {
-			if (err.response.status === 401) {
-				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
-			}
-			return thunkApi.rejectWithValue(err.response.data.msg);
-		}
-	}
-);
+export const editJob = createAsyncThunk('job/editJob', editJobThunk);
 
-export const deleteJob = createAsyncThunk(
-	'job/deleteJob',
-	async (jobId, thunkApi) => {
-		thunkApi.dispatch(showLoading());
-		try {
-			const resp = await customFetch.delete(
-				`/jobs/${jobId}`,
-				authHeader(thunkApi)
-			);
-			thunkApi.dispatch(getAllJobs());
-			return resp.data.msg;
-		} catch (err) {
-			thunkApi.dispatch(hideLoading());
-			CheckAuth(thunkApi, err);
-		}
-	}
-);
+export const deleteJob = createAsyncThunk('job/deleteJob', deleteJobThunk);
 
 const jobSlice = createSlice({
 	name: 'job',
