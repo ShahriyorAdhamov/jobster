@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import authHeader from '../../utils/auth-header';
 import customFetch from '../../utils/axios';
+import CheckAuth from '../../utils/check-auth';
 import {
 	addUserToLocalStorage,
 	getUserFromLocalStorage,
@@ -49,10 +50,7 @@ export const updateUser = createAsyncThunk(
 			);
 			return res.data;
 		} catch (err) {
-			if (err.response.status === 401) {
-				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
-			}
-			return thunkApi.rejectWithValue(err.response.data.msg);
+			CheckAuth(thunkApi, err);
 		}
 	}
 );

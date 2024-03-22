@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import authHeader from '../../utils/auth-header';
 import customFetch from '../../utils/axios';
+import CheckAuth from '../../utils/check-auth';
 import { getUserFromLocalStorage } from '../../utils/local-storage';
 import {
 	getAllJobs,
@@ -70,10 +71,7 @@ export const deleteJob = createAsyncThunk(
 			return resp.data.msg;
 		} catch (err) {
 			thunkApi.dispatch(hideLoading());
-			if (err.response.status === 401) {
-				return thunkApi.rejectWithValue('Unauthorized! Logging Out...');
-			}
-			return thunkApi.rejectWithValue(err.response.data.msg);
+			CheckAuth(thunkApi, err);
 		}
 	}
 );
