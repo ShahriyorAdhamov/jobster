@@ -6,6 +6,7 @@ import JobInfo from './job-info';
 import JobsContainer from './jobs-container';
 import Logo from './logo';
 import Navbar from './navbar';
+import PageBtnContainer from './page-btn-container';
 import SearchContainer from './search-container';
 import SmallSidebar from './small-sidebar';
 import StatsContainer from './stats-container';
@@ -20,6 +21,7 @@ export {
 	JobsContainer,
 	Logo,
 	Navbar,
+	PageBtnContainer,
 	SearchContainer,
 	SmallSidebar,
 	StatItem,

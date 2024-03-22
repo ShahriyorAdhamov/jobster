@@ -43,6 +43,7 @@ export const getAllJobs = createAsyncThunk(
 	async (_, thunkApi) => {
 		try {
 			const res = await customFetch.get('/jobs', authHeader(thunkApi));
+			console.log(res);
 			return res.data;
 		} catch (err) {
 			if (err.response.status === 401) {
@@ -62,6 +63,16 @@ const allJobsSlice = createSlice({
 		},
 		hideLoading: state => {
 			state.isLoading = false;
+		},
+		handleChange: (state, { payload: { name, value } }) => {
+			state.page = 1;
+			state[name] = value;
+		},
+		changePage: (state, { payload }) => {
+			state.page = payload;
+		},
+		clearFilters: state => {
+			return { ...state, ...initialFiltersState };
 		},
 	},
 	extraReducers: builder => {
@@ -94,5 +105,11 @@ const allJobsSlice = createSlice({
 	},
 });
 
-export const { showLoading, hideLoading } = allJobsSlice.actions;
+export const {
+	showLoading,
+	hideLoading,
+	handleChange,
+	clearFilters,
+	changePage,
+} = allJobsSlice.actions;
 export default allJobsSlice.reducer;
