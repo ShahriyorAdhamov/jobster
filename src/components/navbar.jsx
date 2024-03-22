@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaAlignLeft, FaCaretDown, FaUserCircle } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import Wrapper from '../assets/wrappers/Navbar';
+import { clearValues } from '../features/job/job-slice';
 import { logoutUser, toggleSidebar } from '../features/user/user-slice';
 import Logo from './logo';
 
@@ -12,6 +13,11 @@ const Navbar = () => {
 
 	const toggle = () => {
 		dispatch(toggleSidebar());
+	};
+
+	const userLogout = () => {
+		dispatch(logoutUser());
+		dispatch(clearValues());
 	};
 
 	return (
@@ -35,11 +41,7 @@ const Navbar = () => {
 						<FaCaretDown />
 					</button>
 					<div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
-						<button
-							type='button'
-							className='dropdown-btn'
-							onClick={() => dispatch(logoutUser())}
-						>
+						<button type='button' className='dropdown-btn' onClick={userLogout}>
 							logout
 						</button>
 					</div>
