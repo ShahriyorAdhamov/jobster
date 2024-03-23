@@ -21,7 +21,7 @@ export const getAllJobsThunk = async (_, thunkApi) => {
 
 export const showStatsThunk = async (_, thunkApi) => {
 	try {
-		const resp = await customFetch.get('/jobs/stats');
+		const resp = await customFetch.get('/jobs/stats', authHeader(thunkApi));
 
 		return resp.data;
 	} catch (err) {
